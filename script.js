@@ -6,7 +6,7 @@ const toggleIntro = () => {
   const isExpanded = introPanel.getAttribute("aria-expanded") === "true";
   introPanel.setAttribute("aria-expanded", String(!isExpanded));
   introToggle.setAttribute("aria-expanded", String(!isExpanded));
-  introBody.hidden = isExpanded;
+  introBody.setAttribute("aria-hidden", String(isExpanded));
 };
 
 introToggle.addEventListener("click", toggleIntro);
