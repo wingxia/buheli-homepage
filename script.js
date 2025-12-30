@@ -2,6 +2,22 @@ const introPanel = document.querySelector(".intro-panel");
 const introToggle = document.querySelector(".intro-toggle");
 const introBody = document.querySelector(".intro-body");
 const introClose = document.querySelector(".intro-close");
+const root = document.documentElement;
+
+const randomInRange = (min, max) => Math.random() * (max - min) + min;
+
+const setMarbleTexture = () => {
+  const angle = `${Math.round(randomInRange(120, 160))}deg`;
+  const driftX = `${randomInRange(-1.5, 1.5).toFixed(2)}%`;
+  const driftY = `${randomInRange(-1.5, 1.5).toFixed(2)}%`;
+  const veil = randomInRange(0.12, 0.26).toFixed(2);
+  root.style.setProperty("--marble-angle", angle);
+  root.style.setProperty("--marble-drift-x", driftX);
+  root.style.setProperty("--marble-drift-y", driftY);
+  root.style.setProperty("--marble-veil", veil);
+};
+
+setMarbleTexture();
 
 const updateIntroMaxHeight = () => {
   const viewportLimit = window.innerHeight * 0.65;
