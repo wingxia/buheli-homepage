@@ -14,6 +14,7 @@
   --marble-drift-x: 0%;
   --marble-drift-y: 0%;
   --marble-veil: 0.2;
+  --marble-flow: 0deg;
   font-family: "Noto Serif SC", "Source Han Serif SC", "PingFang SC",
     "Microsoft YaHei", serif;
 }
@@ -28,7 +29,7 @@
 
 html,
 body {
-  height: 100%;
+  height: auto;
 }
 
 body {
@@ -38,12 +39,13 @@ body {
   color: var(--ink);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-start;
   line-height: 1.7;
-  min-height: 100svh;
+  min-height: 100dvh;
   overflow-x: hidden;
-  padding: clamp(1.25rem, 4vw, 2.5rem) 1rem;
+  overscroll-behavior-y: none;
+  padding: clamp(1rem, 3vw, 2.5rem) clamp(0.6rem, 2.5vw, 1.25rem);
 }
 
 body::before,
@@ -55,63 +57,94 @@ body::after {
     radial-gradient(circle at 80% 70%, rgba(182, 201, 192, 0.35), transparent 50%),
     repeating-linear-gradient(
       var(--marble-angle),
-      rgba(200, 192, 182, 0.2) 0 2px,
+      rgba(190, 180, 168, 0.28) 0 2px,
       rgba(235, 229, 222, 0.8) 2px 5px,
-      rgba(201, 193, 183, 0.3) 5px 8px
+      rgba(186, 176, 165, 0.32) 5px 8px
+    ),
+    repeating-linear-gradient(
+      calc(var(--marble-angle) + 40deg),
+      rgba(170, 160, 150, 0.3) 0 1px,
+      rgba(247, 244, 239, 0.85) 1px 4px,
+      rgba(172, 162, 152, 0.35) 4px 7px
+    ),
+    repeating-linear-gradient(
+      calc(var(--marble-angle) - 25deg),
+      rgba(158, 148, 136, 0.2) 0 1px,
+      rgba(255, 255, 255, 0) 1px 6px
     ),
     linear-gradient(
       120deg,
       rgba(255, 255, 255, 0.8),
       rgba(224, 217, 209, var(--marble-veil))
     );
-  filter: blur(28px) saturate(105%);
-  opacity: 0.7;
-  transform: translate3d(var(--marble-drift-x), var(--marble-drift-y), 0);
+  filter: blur(20px) saturate(110%);
+  opacity: 0.8;
+  transform: translate3d(var(--marble-drift-x), var(--marble-drift-y), 0)
+    rotate(var(--marble-flow));
   pointer-events: none;
   z-index: -2;
-  animation: drift 18s ease-in-out infinite alternate;
+  animation: marble-flow 24s ease-in-out infinite alternate;
 }
 
 body::after {
-  inset: -40%;
-  opacity: 0.45;
-  animation-duration: 26s;
+  inset: -30%;
+  opacity: 0.55;
+  filter: blur(32px) saturate(120%);
+  mix-blend-mode: multiply;
+  animation-duration: 32s;
+  background: conic-gradient(
+      from 120deg at 30% 40%,
+      rgba(190, 182, 171, 0.25),
+      transparent 30%,
+      rgba(210, 202, 192, 0.3),
+      transparent 55%,
+      rgba(180, 171, 160, 0.25)
+    ),
+    radial-gradient(circle at 70% 30%, rgba(214, 206, 198, 0.4), transparent 55%),
+    radial-gradient(circle at 40% 75%, rgba(186, 178, 168, 0.35), transparent 60%);
 }
 
-@keyframes drift {
+@keyframes marble-flow {
   0% {
-    transform: translate3d(-2%, -1%, 0) scale(1);
+    transform: translate3d(-2%, -1%, 0) rotate(-1.2deg) scale(1.02);
   }
   100% {
-    transform: translate3d(2%, 1%, 0) scale(1.05);
+    transform: translate3d(2%, 1%, 0) rotate(1.2deg) scale(1.05);
   }
 }
 
 .page {
-  width: min(960px, 92vw);
+  width: min(960px, 96vw);
   display: grid;
-  place-items: center;
-  padding: 3rem 1.5rem 2.5rem;
-  min-height: calc(100svh - 4rem);
+  place-items: start center;
+  padding: 2.5rem 1.5rem 2.5rem;
+  min-height: auto;
+  margin: 0 auto;
 }
 
 .center-card {
+  width: min(100%, 920px);
   background: linear-gradient(
     160deg,
-    rgba(255, 255, 255, 0.82),
-    rgba(246, 241, 234, 0.7) 45%,
-    rgba(236, 230, 221, 0.65)
+    rgba(255, 255, 255, 0.78),
+    rgba(246, 241, 234, 0.6) 45%,
+    rgba(232, 226, 217, 0.5)
   );
-  border: 1px solid rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: 24px;
   padding: clamp(1.5rem, 3vw, 2.5rem);
   box-shadow: 0 24px 60px rgba(60, 54, 46, 0.2),
     inset 0 0 40px rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(28px) saturate(135%);
+  backdrop-filter: blur(36px) saturate(170%);
   display: grid;
   gap: 2rem;
   position: relative;
   overflow: hidden;
+}
+
+.center-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .center-card::before {
@@ -122,7 +155,22 @@ body::after {
   background: linear-gradient(150deg, rgba(255, 255, 255, 0.6), transparent 40%),
     linear-gradient(320deg, rgba(196, 179, 167, 0.25), transparent 60%),
     radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.65), transparent 35%);
-  mix-blend-mode: multiply;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.center-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.08) 0 1px,
+      rgba(255, 255, 255, 0) 1px 6px
+    ),
+    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.25), transparent 40%);
+  opacity: 0.22;
   pointer-events: none;
 }
 
@@ -273,17 +321,17 @@ body::after {
   display: grid;
   gap: 0.8rem;
   font-size: 0.95rem;
-  max-height: 0;
+  height: 0;
   opacity: 0;
   overflow: hidden;
+  -webkit-overflow-scrolling: touch;
   padding-right: 0.6rem;
   transform: translateY(-4px);
-  transition: max-height 0.4s ease, opacity 0.3s ease, transform 0.3s ease;
-  will-change: max-height, opacity, transform;
+  transition: height 0.35s ease, opacity 0.3s ease, transform 0.3s ease;
+  will-change: height, opacity, transform;
 }
 
 .intro-panel[aria-expanded="true"] .intro-body {
-  max-height: var(--intro-max-height, 60vh);
   opacity: 1;
   transform: translateY(0);
   overflow: auto;
@@ -386,7 +434,7 @@ body::after {
 
 @media (max-width: 720px) {
   .page {
-    padding-top: 3rem;
+    padding: 1.6rem 0.6rem 2rem;
     min-height: auto;
   }
 
@@ -400,6 +448,22 @@ body::after {
 
   .intro-body {
     font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .center-card {
+    padding: 1.2rem;
+    gap: 1.5rem;
+    width: 100%;
+  }
+
+  .interactive-item {
+    min-height: 80px;
+  }
+
+  .intro-toggle .hint {
+    font-size: 0.78rem;
   }
 }
 
